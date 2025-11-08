@@ -1,11 +1,11 @@
 import React from 'react';
 
 // User-provided images as Base64 strings
-const heroImage = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAHMA4ADASIAAhEBAxEB/8QAGwAAAgMBAQEAAAAAAAAAAAAAAAECAwQFBgf/xABGEAABAwMCAwYDBQcDAgUEAwEBAAIRAwQhEjFBUQUTImFxgZEGMqGxFEJSYsHR8HLhByNTgpLxFVNiFjRzorLCJTRU0uL/xAAYAQEBAQEBAAAAAAAAAAAAAAAAAQIDBP/EACERAQEBAQACAwEBAQEBAAAAAAABEQIhMRJBUQMicWFx/9oADAMBAAIRAxEAPwD6hSoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGj"
-const productTinImage = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAHgAyADASIAAhEBAxEB/8QAGwAAAgMBAQEAAAAAAAAAAAAAAAECAwQFBgf/xAA6EAACAgEDAgUDAgMGAgIBAwUBAgMRBBIhBTFBURNhcSIygZGhFEKxwdFSYnLwByPh8YIzNENTY4KS/9oADAMBAAIRAxEAPwD5/SoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGj"
+const heroImage = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAHMA4ADASIAAhEBAxEB/8QAGwAAAgMBAQEAAAAAAAAAAAAAAAECAwQFBgf/xABGEAABAwMCAwYDBQcDAgUEAwEBAAIRAwQhEjFBUQUTImFxgZEGMqGxFEJSYsHR8HLhByNTgpLxFVNiFjRzorLCJTRU0uL/xAAYAQEBAQEBAAAAAAAAAAAAAAAAAQIDBP/EACERAQEBAQACAwEBAQEBAAAAAAABEQIhMRJBUQMicWFx/9oADAMBAAIRAxEAPwD6hSoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQ-";
+const productTinImage = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAHgAyADASIAAhEBAxEB/8QAGwAAAgMBAQEAAAAAAAAAAAAAAAECAwQFBgf/xAA6EAACAgEDAgUDAgMGAgIBAwUBAgMRBBIhBTFBURNhcSIygZGhFEKxwdFSYnLwByPh8YIzNENTY4KS/9oADAMBAAIRAxEAPwD5/SoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQ-";
 
 const PeanutIcon = () => (
-    <svg xmlns="http://www.w.org/2000/svg" className="h-16 w-16 text-amber-600" viewBox="0 0 24 24" fill="currentColor">
+    <svg xmlns="http://www.w3.org/2000/svg" className="h-16 w-16 text-amber-600" viewBox="0 0 24 24" fill="currentColor">
       <path d="M15.42,8.93c-1.32-2.3-4.03-3.4-6.43-2.39C7.22,7.2,6,9.45,6,12c0,3.31,2.69,6,6,6c1.6,0,3.05-0.63,4.12-1.66 C17.37,15.1,18,13.6,18,12c0-1.12-0.34-2.16-0.93-3.07C16.48,8,15.9,8.4,15.42,8.93z M12,16c-2.21,0-4-1.79-4-4s1.79-4,4-4 s4,1.79,4,4S14.21,16,12,16z"/>
       <path d="M12,2C6.48,2,2,6.48,2,12s4.48,10,10,10s10-4.48,10-10S17.52,2,12,2z M12,20c-4.41,0-8-3.59-8-8s3.59-8,8-8s8,3.59,8,8 S16.41,20,12,20z"/>
     </svg>
@@ -60,6 +60,14 @@ const App: React.FC = () => {
     }
   };
 
+  const handleScrollClick = (e: React.MouseEvent<HTMLAnchorElement>, sectionId: string) => {
+    e.preventDefault();
+    scrollToSection(sectionId);
+  };
+
+  const gmapsUrl = "https://www.google.com/maps/search/?api=1&query=SHRIYAM+HERITAGE+Baakrol+Badrabad+Ahmedabad+Gujarat";
+
+
   return (
     <div className="bg-yellow-50 min-h-screen text-gray-800">
       {/* Header */}
@@ -67,14 +75,15 @@ const App: React.FC = () => {
         <div className="container mx-auto px-6 py-4 flex justify-between items-center">
           <div>
             <h1 className="text-3xl font-bold text-amber-900">બાપા સીતારામ મીની ઓઈલ મીલ</h1>
-            <p className="text-lg text-amber-800">શુદ્ધ અને સાત્વિક શિંગતેલ</p>
+            <p className="text-lg text-amber-800">બાકરોલમાં શુદ્ધ અને સાત્વિક સિંગતેલ</p>
           </div>
-          <button 
-            onClick={() => scrollToSection('contact')} 
+          <a 
+            href="#contact"
+            onClick={(e) => handleScrollClick(e, 'contact')}
             className="bg-green-700 text-white font-bold py-2 px-6 rounded-full hover:bg-green-800 transition-colors duration-300 self-center whitespace-nowrap"
           >
             સંપર્ક કરો
-          </button>
+          </a>
         </div>
       </header>
 
@@ -82,20 +91,21 @@ const App: React.FC = () => {
         {/* Hero Section */}
         <section className="relative h-[60vh] md:h-[80vh] flex items-center justify-center text-white text-center px-4">
           <div className="absolute inset-0 bg-black/50 z-10"></div>
-          <img src={heroImage} alt="બાપા સીતારામ મીની ઓઈલ મીલ" className="absolute inset-0 w-full h-full object-cover"/>
+          <img src={heroImage} alt="બાપા સીતારામ ઓઈલ મીલ, બાકરોલ, અમદાવાદ - શુદ્ધ સિંગતેલ (મગફળીનું તેલ)" className="absolute inset-0 w-full h-full object-cover"/>
           <div className="relative z-20 max-w-3xl">
             <h2 className="text-4xl md:text-6xl font-extrabold leading-tight mb-4" style={{ textShadow: '2px 2px 8px rgba(0,0,0,0.7)' }}>
-              તમારી આંખો સામે કાઢેલું, શુદ્ધ મગફળીનું તેલ
+              તમારી આંખો સામે કાઢેલું, ૧૦૦% શુદ્ધ મગફળીનું તેલ
             </h2>
             <p className="text-lg md:text-xl mb-8" style={{ textShadow: '1px 1px 4px rgba(0,0,0,0.8)' }}>
-              અમે તમારી લાવેલી શુદ્ધ મગફળીમાંથી ઉચ્ચ ગુણવત્તાનું તેલ કાઢી, ૫ લિટરના ડબ્બામાં પેક કરી આપીએ છીએ.
+              અમારા બાકરોલ સ્થિત ઓઈલ મીલમાં, અમે તમારી લાવેલી શુદ્ધ મગફળીમાંથી ઉચ્ચ ગુણવત્તાનું તેલ કાઢી, ૫ લિટરના ડબ્બામાં પેક કરી આપીએ છીએ.
             </p>
-            <button 
-              onClick={() => scrollToSection('process')}
-              className="bg-yellow-500 text-amber-900 font-bold py-3 px-8 rounded-full text-lg hover:bg-yellow-400 transition-transform transform hover:scale-105 duration-300"
+            <a 
+              href="#process"
+              onClick={(e) => handleScrollClick(e, 'process')}
+              className="bg-yellow-500 text-amber-900 font-bold py-3 px-8 rounded-full text-lg hover:bg-yellow-400 transition-transform transform hover:scale-105 duration-300 inline-block"
             >
               વધુ જાણો
-            </button>
+            </a>
           </div>
         </section>
 
@@ -103,8 +113,8 @@ const App: React.FC = () => {
         <section id="process" className="py-20 bg-amber-50">
           <div className="container mx-auto px-6">
             <div className="text-center mb-12">
-              <h2 className="text-4xl font-bold text-amber-900">અમારી પ્રક્રિયા</h2>
-              <p className="text-lg text-gray-600 mt-2">શુદ્ધતા અને પારદર્શિતાના ત્રણ સરળ પગલાં.</p>
+              <h2 className="text-4xl font-bold text-amber-900">સિંગતેલ બનાવવાની અમારી પ્રક્રિયા</h2>
+              <p className="text-lg text-gray-600 mt-2">શુદ્ધતા અને પારદર્શિતાના ત્રણ સરળ પગલાંમાં તાજું મગફળીનું તેલ.</p>
             </div>
             <div className="grid md:grid-cols-3 gap-10">
               <ProcessStep 
@@ -127,10 +137,11 @@ const App: React.FC = () => {
         </section>
 
         {/* Why Choose Us Section */}
-        <section className="py-20" style={{backgroundImage: "url('https://www.tastingtable.com/img/gallery/is-peanut-oil-actually-good-for-you/l-intro-1662658428.jpg')", backgroundSize: 'cover', backgroundAttachment: 'fixed'}}>
+        <section id="features" className="py-20" style={{backgroundImage: "url('https://www.tastingtable.com/img/gallery/is-peanut-oil-actually-good-for-you/l-intro-1662658428.jpg')", backgroundSize: 'cover', backgroundAttachment: 'fixed'}}>
           <div className="container mx-auto px-6 bg-white/30 backdrop-blur-lg py-16 rounded-xl">
             <div className="text-center mb-12">
-              <h2 className="text-4xl font-bold text-gray-900">શા માટે અમને પસંદ કરો?</h2>
+              <h2 className="text-4xl font-bold text-gray-900">શા માટે અમારું સિંગતેલ પસંદ કરો?</h2>
+               <p className="text-lg text-gray-700 mt-2">બાકરોલમાં શ્રેષ્ઠ અને શુદ્ધ મગફળી તેલનો અનુભવ કરો.</p>
             </div>
             <div className="grid md:grid-cols-3 gap-8">
               <FeatureCard 
@@ -150,27 +161,28 @@ const App: React.FC = () => {
         </section>
 
         {/* Product Section */}
-        <section className="py-20 bg-white">
+        <section id="product" className="py-20 bg-white">
           <div className="container mx-auto px-6">
             <div className="flex flex-col md:flex-row items-center gap-12">
               <div className="md:w-1/2">
-                <img src={productTinImage} alt="૫ લિટર તેલનો ડબ્બો" className="rounded-xl shadow-2xl w-full h-auto object-cover"/>
+                <img src={productTinImage} alt="બાપા સીતારામ શુદ્ધ મગફળીનું તેલ (સિંગતેલ) નો ૧૫ કિલોનો ડબ્બો" className="rounded-xl shadow-2xl w-full h-auto object-cover"/>
               </div>
               <div className="md:w-1/2 text-center md:text-left">
-                <h2 className="text-4xl font-bold text-amber-900 mb-4">અમારું ઉત્પાદન</h2>
+                <h2 className="text-4xl font-bold text-amber-900 mb-4">અમારું ઉત્પાદન: શુદ્ધ સિંગતેલ</h2>
                 <h3 className="text-3xl font-semibold text-green-800 mb-4">૧૫ કિલો શુદ્ધ મગફળી તેલનો ડબ્બો</h3>
                 <p className="text-gray-600 text-lg mb-6">
-                  તમારા પરિવારના સ્વાસ્થ્ય માટે ઉત્તમ, તાજગી અને શુદ્ધતાથી ભરપૂર. રસોઈ માટે આદર્શ અને સ્વાદમાં ઉત્તમ.
+                  તમારા પરિવારના સ્વાસ્થ્ય માટે ઉત્તમ, તાજગી અને શુદ્ધતાથી ભરપૂર. રસોઈ માટે આદર્શ અને સ્વાદમાં ઉત્તમ મગફળીનું તેલ (સિંગતેલ).
                 </p>
                 <p className="text-4xl font-bold text-amber-900 mb-8">
                   ₹ કિંમત માટે સંપર્ક કરો
                 </p>
-                <button 
-                  onClick={() => scrollToSection('contact')}
-                  className="bg-amber-800 text-white font-bold py-3 px-10 rounded-full text-lg hover:bg-amber-900 transition-colors duration-300"
+                <a 
+                  href="#contact"
+                  onClick={(e) => handleScrollClick(e, 'contact')}
+                  className="bg-amber-800 text-white font-bold py-3 px-10 rounded-full text-lg hover:bg-amber-900 transition-colors duration-300 inline-block"
                 >
                   ઓર્ડર કરો
-                </button>
+                </a>
               </div>
             </div>
           </div>
@@ -181,17 +193,20 @@ const App: React.FC = () => {
           <div className="container mx-auto px-6 text-center">
             <h2 className="text-4xl font-bold mb-6">અમારો સંપર્ક કરો</h2>
             <p className="text-lg text-gray-300 mb-8 max-w-2xl mx-auto">
-              શુદ્ધ મગફળીના તેલ વિશે વધુ માહિતી અથવા ઓર્ડર માટે, નીચે આપેલા સરનામે રૂબરૂ મુલાકાત લો અથવા ફોન કરો.
+             બાકરોલમાં શુદ્ધ મગફળીના તેલ (સિંગતેલ) વિશે વધુ માહિતી અથવા ઓર્ડર માટે, નીચે આપેલા સરનામે રૂબરૂ મુલાકાત લો અથવા ફોન કરો.
             </p>
             <div className="flex flex-col md:flex-row justify-center items-center gap-10">
               <div className="bg-gray-700 p-6 rounded-lg">
-                <h3 className="text-xl font-semibold mb-2">સરનામું</h3>
-                <p className="text-gray-300 max-w-xs">શ્રીયમ હેરિટેજ ફ્લેટ્સ અને દુકાનો, બકરોલ સર્કલ પાસે, સરદાર પટેલ રિંગ રોડ, વેજલપુર, બકરોલ, અમદાવાદ, ગુજરાત ૩૮૨૨૧૦</p>
+                <h3 className="text-xl font-semibold mb-2">અમારું સરનામું</h3>
+                <address className="not-italic">
+                  <p className="text-gray-300 max-w-xs">શ્રીયમ હેરિટેજ ફ્લેટ્સ અને દુકાનો,<br/>બાકરોલ સર્કલ પાસે, સરદાર પટેલ રિંગ રોડ,<br/>વેજલપુર, બાકરોલ, અમદાવાદ, ગુજરાત ૩૮૨૨૧૦</p>
+                  <a href={gmapsUrl} target="_blank" rel="noopener noreferrer" className="text-yellow-400 hover:text-yellow-300 mt-2 inline-block">ગૂગલ મેપ્સ પર જુઓ</a>
+                </address>
               </div>
               <div className="bg-gray-700 p-6 rounded-lg">
-                <h3 className="text-xl font-semibold mb-2">ફોન</h3>
-                <p className="text-gray-300">+૯૧ ૯૩૨૭૧ ૭૭૯૯૦</p>
-                <p className="text-gray-300 mt-1">+૯૧ ૭૦૧૬૮ ૭૫૧૮૧</p>
+                <h3 className="text-xl font-semibold mb-2">ફોન નંબર</h3>
+                <a href="tel:+919327177990" className="text-gray-300 block hover:text-yellow-400">+૯૧ ૯૩૨૭૧ ૭૭૯૯૦</a>
+                <a href="tel:+917016875181" className="text-gray-300 mt-1 block hover:text-yellow-400">+૯૧ ૭૦૧૬૮ ૭૫૧૮૧</a>
               </div>
             </div>
           </div>
@@ -202,6 +217,7 @@ const App: React.FC = () => {
       <footer className="bg-gray-900 text-white py-6">
         <div className="container mx-auto px-6 text-center">
           <p>&copy; {new Date().getFullYear()} બાપા સીતારામ મીની ઓઈલ મીલ. સર્વાધિકાર સુરક્ષિત.</p>
+          <p className="text-sm text-gray-400 mt-2">બાકરોલ, અમદાવાદમાં શુદ્ધ સિંગતેલ અને મગફળીના તેલ માટે તમારો વિશ્વાસપાત્ર સ્ત્રોત.</p>
         </div>
       </footer>
     </div>
