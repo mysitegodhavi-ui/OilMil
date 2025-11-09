@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
-// User-provided images as Base64 strings
-const heroImage = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAHMA4ADASIAAhEBAxEB/8QAGwAAAgMBAQEAAAAAAAAAAAAAAAECAwQFBgf/xABGEAABAwMCAwYDBQcDAgUEAwEBAAIRAwQhEjFBUQUTImFxgZEGMqGxFEJSYsHR8HLhByNTgpLxFVNiFjRzorLCJTRU0uL/xAAYAQEBAQEBAAAAAAAAAAAAAAAAAQIDBP/EACERAQEBAQACAwEBAQEBAAAAAAABEQIhMRJBUQMicWFx/9oADAMBAAIRAxEAPwD6hSoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQ-";
-const productTinImage = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAHgAyADASIAAhEBAxEB/8QAGwAAAgMBAQEAAAAAAAAAAAAAAAECAwQFBgf/xAA6EAACAgEDAgUDAgMGAgIBAwUBAgMRBBIhBTFBURNhcSIygZGhFEKxwdFSYnLwByPh8YIzNENTY4KS/9oADAMBAAIRAxEAPwD5/SoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQoGjQ-";
+// Use direct JPEG assets placed in public/assets
+const HERO_BG = '/assets/home-bg.jpeg';
+const PRODUCT_TIN = '/assets/dabbo.jpeg';
+const EXTRA_IMG = '/assets/i3.jpeg';
 
 const PeanutIcon = () => (
     <svg xmlns="http://www.w3.org/2000/svg" className="h-16 w-16 text-amber-600" viewBox="0 0 24 24" fill="currentColor">
@@ -10,7 +11,6 @@ const PeanutIcon = () => (
       <path d="M12,2C6.48,2,2,6.48,2,12s4.48,10,10,10s10-4.48,10-10S17.52,2,12,2z M12,20c-4.41,0-8-3.59-8-8s3.59-8,8-8s8,3.59,8,8 S16.41,20,12,20z"/>
     </svg>
 );
-
 
 const OilDropIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" className="h-16 w-16 text-yellow-500" viewBox="0 0 20 20" fill="currentColor">
@@ -25,7 +25,6 @@ const PackageIcon = () => (
         <path d="M12.5,13.5h-1V10h1V13.5z M12,8.5c-0.6,0-1,0.4-1,1s0.4,1,1,1s1-0.4,1-1S12.6,8.5,12,8.5z"/>
     </svg>
 );
-
 
 interface ProcessStepProps {
   icon: React.ReactNode;
@@ -51,7 +50,6 @@ const FeatureCard: React.FC<FeatureCardProps> = ({ title, description }) => (
   </div>
 );
 
-
 const App: React.FC = () => {
   const scrollToSection = (sectionId: string) => {
     const section = document.getElementById(sectionId);
@@ -67,6 +65,18 @@ const App: React.FC = () => {
 
   const gmapsUrl = "https://www.google.com/maps/search/?api=1&query=SHRIYAM+HERITAGE+Baakrol+Badrabad+Ahmedabad+Gujarat";
 
+  // Choose hero image based on viewport (mobile uses i3, desktop keeps original)
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    const update = () => setIsMobile(window.innerWidth < 768); // Tailwind md breakpoint
+    update();
+    window.addEventListener('resize', update);
+    return () => window.removeEventListener('resize', update);
+  }, []);
+
+  const heroImage = isMobile ? EXTRA_IMG : HERO_BG;
+  const bgSize = isMobile ? 'cover' : '110%';
+  const bgAttach = isMobile ? 'scroll' : 'fixed';
 
   return (
     <div className="bg-yellow-50 min-h-screen text-gray-800">
@@ -88,21 +98,25 @@ const App: React.FC = () => {
       </header>
 
       <main>
-        {/* Hero Section */}
-        <section className="relative h-[60vh] md:h-[80vh] flex items-center justify-center text-white text-center px-4">
-          <div className="absolute inset-0 bg-black/50 z-10"></div>
-          <img src={heroImage} alt="બાપા સીતારામ ઓઈલ મીલ, બાકરોલ, અમદાવાદ - શુદ્ધ સિંગતેલ (મગફળીનું તેલ)" className="absolute inset-0 w-full h-full object-cover"/>
-          <div className="relative z-20 max-w-3xl">
-            <h2 className="text-4xl md:text-6xl font-extrabold leading-tight mb-4" style={{ textShadow: '2px 2px 8px rgba(0,0,0,0.7)' }}>
-              તમારી આંખો સામે કાઢેલું, ૧૦૦% શુદ્ધ મગફળીનું તેલ
+        {/* Hero / Home Section */}
+        <section
+          aria-label="Hero - Home"
+          className="relative w-full flex items-center justify-center text-white text-center"
+          style={{ backgroundImage: `url('${heroImage}')`, backgroundSize: bgSize, backgroundPosition: 'center', backgroundAttachment: bgAttach, backgroundColor: '#2d2416', backgroundRepeat: 'no-repeat', minHeight: '100vh', aspectRatio: '16/9' }}
+        >
+          <div className="absolute inset-0 bg-black/60 z-10"></div>
+          <div className="relative z-20 max-w-3xl px-4 -mt-32 md:-mt-32">
+            <h2 className="text-4xl md:text-6xl font-extrabold leading-tight mb-32" style={{ textShadow: '3px 3px 12px rgba(0,0,0,0.9), 2px 2px 4px rgba(0,0,0,0.8)' }}>
+              <span>તમારી આંખો સામે કાઢેલું,</span>
+              <span className="block mt-3">૧૦૦% શુદ્ધ મગફળીનું તેલ</span>
             </h2>
-            <p className="text-lg md:text-xl mb-8" style={{ textShadow: '1px 1px 4px rgba(0,0,0,0.8)' }}>
+            <p className="text-lg md:text-2xl mb-10 font-medium mt-8 md:mt-12" style={{ textShadow: '2px 2px 8px rgba(0,0,0,0.95), 1px 1px 3px rgba(0,0,0,0.9)' }}>
               અમારા બાકરોલ સ્થિત ઓઈલ મીલમાં, અમે તમારી લાવેલી શુદ્ધ મગફળીમાંથી ઉચ્ચ ગુણવત્તાનું તેલ કાઢી, ૫ લિટરના ડબ્બામાં પેક કરી આપીએ છીએ.
             </p>
             <a 
               href="#process"
               onClick={(e) => handleScrollClick(e, 'process')}
-              className="bg-yellow-500 text-amber-900 font-bold py-3 px-8 rounded-full text-lg hover:bg-yellow-400 transition-transform transform hover:scale-105 duration-300 inline-block"
+              className="bg-gradient-to-r from-amber-400 to-yellow-400 text-amber-950 font-bold py-4 px-12 rounded-full text-xl hover:from-amber-300 hover:to-yellow-300 transition-all transform hover:scale-110 duration-300 inline-block shadow-2xl border-2 border-amber-600"
             >
               વધુ જાણો
             </a>
@@ -125,7 +139,7 @@ const App: React.FC = () => {
               <ProcessStep 
                 icon={<OilDropIcon />} 
                 title="૨. તાજું તેલ નિષ્કર્ષણ" 
-                description="અમારા આધુનિક મશીન દ્વારા તમારી નજર સામે જ તેલ કાઢવામાં આવે છે." 
+                description="અમારા આધુનિક મશીન દ્વારા વશેર નજર સામે જ તેલ કાઢવામાં આવે છે." 
               />
               <ProcessStep 
                 icon={<PackageIcon />} 
@@ -154,7 +168,7 @@ const App: React.FC = () => {
               />
               <FeatureCard 
                 title="સ્વાસ્થ્યપ્રદ" 
-                description="કોલ્ડ પ્રેસ પદ્ધતિથી કુદરતી વિટામિન્સ અને પોષક તત્વો જળવાઈ રહે છે, જે તમારા સ્વાસ્થ્ય માટે ઉત્તમ છે." 
+                description="કોલ્ડ પ્રેસ પદ્ધતિથી કુદરની વિટામિન્સ અને પોષક તત્વો જળવાઈ રહે છે, જે તમારા સ્વાસ્થ્ય માટે ઉત્તમ છે." 
               />
             </div>
           </div>
@@ -165,7 +179,7 @@ const App: React.FC = () => {
           <div className="container mx-auto px-6">
             <div className="flex flex-col md:flex-row items-center gap-12">
               <div className="md:w-1/2">
-                <img src={productTinImage} alt="બાપા સીતારામ શુદ્ધ મગફળીનું તેલ (સિંગતેલ) નો ૧૫ કિલોનો ડબ્બો" className="rounded-xl shadow-2xl w-full h-auto object-cover"/>
+                <img src={PRODUCT_TIN} alt="બાપા સીતારામ શુદ્ધ મગફળીનું તેલ (સિંગતેલ) નો ૧૫ કિલોનો ડબ્બો" className="rounded-xl shadow-2xl w-full h-auto object-cover"/>
               </div>
               <div className="md:w-1/2 text-center md:text-left">
                 <h2 className="text-4xl font-bold text-amber-900 mb-4">અમારું ઉત્પાદન: શુદ્ધ સિંગતેલ</h2>
