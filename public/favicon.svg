@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" role="img" aria-label="Oil drop favicon">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#fbbf24"/>
+      <stop offset="100%" stop-color="#d97706"/>
+    </linearGradient>
+  </defs>
+  <!-- Oil drop -->
+  <path d="M32 6 C 32 6, 18 24, 18 34 C 18 46, 25 56, 32 56 C 39 56, 46 46, 46 34 C 46 24, 32 6, 32 6 Z" fill="url(#g)" stroke="#92400e" stroke-width="1.5"/>
+  <!-- Subtle highlight -->
+  <path d="M28 18 C 25 24, 24 30, 27 37 C 28.2 39.6, 28.2 40.8, 27 41.5 C 22.5 36, 23 27.5, 26.2 21.5 C 27.1 19.8, 28.8 18.4, 28 18 Z" fill="#ffffff" opacity="0.35"/>
+</svg>
