@@ -221,6 +221,7 @@ const App: React.FC = () => {
                 <h3 className="text-xl font-semibold mb-2">ફોન નંબર</h3>
                 <a href="tel:+919327177990" className="text-gray-300 block hover:text-yellow-400">+૯૧ ૯૩૨૭૧ ૭૭૯૯૦</a>
                 <a href="tel:+917016875181" className="text-gray-300 mt-1 block hover:text-yellow-400">+૯૧ ૭૦૧૬૮ ૭૫૧૮૧</a>
+                <a href="tel:+919725922323" className="text-gray-300 mt-1 block hover:text-yellow-400">+૯૧ ૯૭૨૫૯ ૨૨૩૨૩</a>
               </div>
             </div>
           </div>
