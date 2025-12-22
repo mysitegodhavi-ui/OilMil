@@ -1,56 +1,167 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
+import { motion, useScroll, useTransform, useInView, AnimatePresence } from 'framer-motion';
+import { Droplets, Package, Sprout, Phone, MapPin, CheckCircle, Sparkles } from 'lucide-react';
 
 // Use direct JPEG assets placed in public/assets
 const HERO_BG = '/assets/home-bg.jpeg';
 const PRODUCT_TIN = '/assets/dabbo.jpeg';
 const EXTRA_IMG = '/assets/i3.jpeg';
 
+// Floating 3D Oil Drop Animation Component
+const FloatingOilDrop = ({ delay = 0, duration = 3 }: { delay?: number; duration?: number }) => (
+  <motion.div
+    className="absolute w-16 h-20 rounded-full opacity-20"
+    style={{
+      background: 'radial-gradient(circle at 30% 30%, #fbbf24, #f59e0b, #d97706)',
+      filter: 'blur(2px)',
+    }}
+    animate={{
+      y: [0, -30, 0],
+      x: [0, 15, -15, 0],
+      scale: [1, 1.1, 0.9, 1],
+      rotate: [0, 10, -10, 0],
+    }}
+    transition={{
+      duration,
+      repeat: Infinity,
+      delay,
+      ease: "easeInOut"
+    }}
+  />
+);
+
+// 3D Peanut Icon with rotation
 const PeanutIcon = () => (
-    <svg xmlns="http://www.w3.org/2000/svg" className="h-16 w-16 text-amber-600" viewBox="0 0 24 24" fill="currentColor">
+  <motion.div
+    whileHover={{ rotateY: 360, scale: 1.1 }}
+    transition={{ duration: 0.6 }}
+    className="perspective-1000"
+  >
+    <svg xmlns="http://www.w3.org/2000/svg" className="h-20 w-20 text-amber-500 drop-shadow-2xl" viewBox="0 0 24 24" fill="currentColor">
       <path d="M15.42,8.93c-1.32-2.3-4.03-3.4-6.43-2.39C7.22,7.2,6,9.45,6,12c0,3.31,2.69,6,6,6c1.6,0,3.05-0.63,4.12-1.66 C17.37,15.1,18,13.6,18,12c0-1.12-0.34-2.16-0.93-3.07C16.48,8,15.9,8.4,15.42,8.93z M12,16c-2.21,0-4-1.79-4-4s1.79-4,4-4 s4,1.79,4,4S14.21,16,12,16z"/>
       <path d="M12,2C6.48,2,2,6.48,2,12s4.48,10,10,10s10-4.48,10-10S17.52,2,12,2z M12,20c-4.41,0-8-3.59-8-8s3.59-8,8-8s8,3.59,8,8 S16.41,20,12,20z"/>
     </svg>
+  </motion.div>
 );
 
-const OilDropIcon = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" className="h-16 w-16 text-yellow-500" viewBox="0 0 20 20" fill="currentColor">
-    <path fillRule="evenodd" d="M10,3.5c-1.63,0-3.1,0.85-3.95,2.18L10,12.5l3.95-6.82C13.1,4.35,11.63,3.5,10,3.5z"/>
-    <path d="M10,18.5c-4.69,0-8.5-3.81-8.5-8.5S5.31,1.5,10,1.5s8.5,3.81,8.5,8.5S14.69,18.5,10,18.5z M10,3.5 c-1.63,0-3.1,0.85-3.95,2.18L10,12.5l3.95-6.82C13.1,4.35,11.63,3.5,10,3.5z"/>
-  </svg>
-);
-
-const PackageIcon = () => (
-    <svg xmlns="http://www.w3.org/2000/svg" className="h-16 w-16 text-green-700" viewBox="0 0 24 24" fill="currentColor">
-        <path d="M21.6,8.2l-9-6.9c-0.4-0.3-0.9-0.3-1.3,0l-9,6.9C2.1,8.4,2,8.7,2,9v6c0,0.3,0.1,0.6,0.4,0.8l9,6.9c0.2,0.1,0.4,0.2,0.6,0.2s0.4-0.1,0.6-0.2l9-6.9c0.3-0.2,0.4-0.5,0.4-0.8V9C22,8.7,21.9,8.4,21.6,8.2z M12,19.9L4.4,14.7V9.3L12,4.1l7.6,5.2v5.3L12,19.9z"/>
-        <path d="M12.5,13.5h-1V10h1V13.5z M12,8.5c-0.6,0-1,0.4-1,1s0.4,1,1,1s1-0.4,1-1S12.6,8.5,12,8.5z"/>
-    </svg>
-);
-
+// Animated Process Step Card
 interface ProcessStepProps {
   icon: React.ReactNode;
   title: string;
   description: string;
+  index: number;
 }
-const ProcessStep: React.FC<ProcessStepProps> = ({ icon, title, description }) => (
-  <div className="flex flex-col items-center text-center p-6 bg-white rounded-xl shadow-lg transition-transform transform hover:scale-105">
-    <div className="mb-4">{icon}</div>
-    <h3 className="text-xl font-semibold text-amber-900 mb-2">{title}</h3>
-    <p className="text-gray-600">{description}</p>
-  </div>
-);
+const ProcessStep: React.FC<ProcessStepProps> = ({ icon, title, description, index }) => {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-100px" });
 
+  return (
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, y: 50, rotateX: -15 }}
+      animate={isInView ? { opacity: 1, y: 0, rotateX: 0 } : {}}
+      transition={{ duration: 0.6, delay: index * 0.2 }}
+      whileHover={{ y: -10, scale: 1.05 }}
+      className="relative group perspective-1000"
+    >
+      <div className="relative overflow-hidden flex flex-col items-center text-center p-8 bg-gradient-to-br from-white via-amber-50 to-orange-50 rounded-2xl shadow-xl border border-amber-200/50 backdrop-blur-sm">
+        {/* Animated background pattern */}
+        <motion.div
+          className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+          style={{
+            background: 'radial-gradient(circle at 50% 50%, rgba(251, 191, 36, 0.1), transparent)',
+          }}
+        />
+        
+        <motion.div
+          animate={{ rotate: 360 }}
+          transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+          className="mb-6 relative z-10"
+        >
+          {icon}
+        </motion.div>
+        
+        <h3 className="text-lg md:text-xl font-bold bg-gradient-to-r from-amber-800 to-orange-700 bg-clip-text text-transparent mb-3 relative z-10 leading-snug py-1">
+          {title}
+        </h3>
+        <p className="text-sm md:text-base text-gray-700 leading-relaxed relative z-10">{description}</p>
+        
+        {/* Decorative corner elements */}
+        <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-amber-400/20 to-transparent rounded-bl-full" />
+        <div className="absolute bottom-0 left-0 w-20 h-20 bg-gradient-to-tr from-orange-400/20 to-transparent rounded-tr-full" />
+      </div>
+    </motion.div>
+  );
+};
+
+// Enhanced Feature Card with 3D effect
 interface FeatureCardProps {
   title: string;
   description: string;
+  index: number;
 }
-const FeatureCard: React.FC<FeatureCardProps> = ({ title, description }) => (
-  <div className="bg-white/80 backdrop-blur-sm p-6 rounded-lg shadow-md border border-amber-200">
-    <h3 className="text-2xl font-bold text-green-800 mb-3">{title}</h3>
-    <p className="text-gray-700 leading-relaxed">{description}</p>
-  </div>
-);
+const FeatureCard: React.FC<FeatureCardProps> = ({ title, description, index }) => {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true });
+
+  return (
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, scale: 0.8, rotateY: -20 }}
+      animate={isInView ? { opacity: 1, scale: 1, rotateY: 0 } : {}}
+      transition={{ duration: 0.5, delay: index * 0.15 }}
+      whileHover={{ scale: 1.05, rotateY: 5 }}
+      className="relative group perspective-1000"
+    >
+      <div className="relative bg-gradient-to-br from-white via-emerald-50 to-teal-50 p-8 rounded-2xl shadow-2xl border border-emerald-200/50 overflow-hidden">
+        {/* Animated gradient overlay */}
+        <motion.div
+          className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700"
+          style={{
+            background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(5, 150, 105, 0.1) 100%)',
+          }}
+        />
+        
+        {/* Sparkle effect on hover */}
+        <motion.div
+          className="absolute top-4 right-4 opacity-0 group-hover:opacity-100"
+          animate={{ rotate: 360 }}
+          transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+        >
+          <Sparkles className="w-6 h-6 text-amber-400" />
+        </motion.div>
+
+        <div className="relative z-10">
+          <motion.div
+            initial={{ scale: 0 }}
+            animate={isInView ? { scale: 1 } : {}}
+            transition={{ delay: index * 0.15 + 0.3, type: "spring" }}
+            className="inline-block mb-3"
+          >
+            <CheckCircle className="w-10 h-10 text-emerald-600" />
+          </motion.div>
+          
+          <h3 className="text-lg md:text-xl font-bold bg-gradient-to-r from-emerald-700 to-teal-600 bg-clip-text text-transparent mb-4 leading-snug py-1">
+            {title}
+          </h3>
+          <p className="text-sm md:text-base text-gray-700 leading-relaxed">{description}</p>
+        </div>
+
+        {/* Decorative bottom wave */}
+        <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-emerald-400 via-teal-400 to-emerald-400" />
+      </div>
+    </motion.div>
+  );
+};
 
 const App: React.FC = () => {
+  const { scrollYProgress } = useScroll();
+  const backgroundColor = useTransform(
+    scrollYProgress,
+    [0, 0.3, 0.6, 1],
+    ['#fefce8', '#fef3c7', '#fef3c7', '#f3f4f6']
+  );
+
   const scrollToSection = (sectionId: string) => {
     const section = document.getElementById(sectionId);
     if (section) {
@@ -65,177 +176,888 @@ const App: React.FC = () => {
 
   const gmapsUrl = "https://www.google.com/maps/search/?api=1&query=SHRIYAM+HERITAGE+Baakrol+Badrabad+Ahmedabad+Gujarat";
 
-  // Choose hero image based on viewport (mobile uses i3, desktop keeps original)
   const [isMobile, setIsMobile] = useState(false);
+  const [isHeaderVisible, setIsHeaderVisible] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
+
   useEffect(() => {
-    const update = () => setIsMobile(window.innerWidth < 768); // Tailwind md breakpoint
+    const update = () => setIsMobile(window.innerWidth < 768);
     update();
     window.addEventListener('resize', update);
     return () => window.removeEventListener('resize', update);
   }, []);
 
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      setIsHeaderVisible(currentScrollY < lastScrollY || currentScrollY < 50);
+      setLastScrollY(currentScrollY);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [lastScrollY]);
+
   const heroImage = isMobile ? EXTRA_IMG : HERO_BG;
-  const bgSize = isMobile ? 'cover' : '110%';
-  const bgAttach = isMobile ? 'scroll' : 'fixed';
 
   return (
-    <div className="bg-yellow-50 min-h-screen text-gray-800">
-      {/* Header */}
-      <header className="bg-white/70 backdrop-blur-md sticky top-0 z-50 shadow-sm">
-        <div className="container mx-auto px-6 py-4 flex justify-between items-center">
-          <div>
-            <h1 className="text-3xl font-bold text-amber-900">બાપા સીતારામ મીની ઓઈલ મીલ</h1>
-            <p className="text-lg text-amber-800">બાકરોલમાં શુદ્ધ અને સાત્વિક સિંગતેલ</p>
-          </div>
-          <a 
-            href="#contact"
-            onClick={(e) => handleScrollClick(e, 'contact')}
-            className="bg-green-700 text-white font-bold py-2 px-6 rounded-full hover:bg-green-800 transition-colors duration-300 self-center whitespace-nowrap"
+    <motion.div 
+      style={{ backgroundColor }}
+      className="min-h-screen text-gray-800 overflow-hidden"
+    >
+      {/* Enhanced Header with slide animation */}
+      <motion.header
+        initial={{ y: 0 }}
+        animate={{ y: isHeaderVisible ? 0 : -100 }}
+        transition={{ duration: 0.3 }}
+        className="bg-gradient-to-r from-amber-50 via-white to-amber-50 backdrop-blur-xl sticky top-0 z-50 shadow-lg border-b border-amber-200/50"
+      >
+        <div className="container mx-auto px-6 py-5 flex flex-col md:flex-row justify-between items-center gap-4">
+          <motion.div
+            initial={{ opacity: 0, x: -50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6 }}
+            className="flex items-center gap-4 text-center md:text-left"
           >
-            સંપર્ક કરો
-          </a>
+            <motion.img
+              src="/bapa-sitaram-logo.svg"
+              alt="બાપા સીતારામ મીની ઓઈલ મીલ લોગો"
+              className="h-14 w-14 md:h-16 md:w-16"
+              whileHover={{ rotate: 360, scale: 1.1 }}
+              transition={{ duration: 0.6 }}
+            />
+            <div>
+              <h1 className="text-xl md:text-2xl font-bold bg-gradient-to-r from-amber-700 via-orange-600 to-amber-800 bg-clip-text text-transparent leading-relaxed py-1">
+                બાપા સીતારામ મીની ઓઈલ મીલ
+              </h1>
+              <p className="text-sm md:text-base text-amber-700 font-medium mt-2 leading-relaxed">બાકરોલમાં શુદ્ધ અને સાત્વિક સિંગતેલ</p>
+            </div>
+          </motion.div>
+          
+          <div className="flex items-center gap-3">
+            <motion.a
+              href="https://www.instagram.com/bapa_sitaram_oilmill"
+              target="_blank"
+              rel="noopener noreferrer"
+              whileHover={{ scale: 1.1, rotate: 5 }}
+              whileTap={{ scale: 0.9 }}
+              className="bg-gradient-to-r from-purple-600 via-pink-600 to-orange-500 text-white p-3 rounded-full shadow-lg hover:shadow-xl transition-shadow relative z-10"
+            >
+              <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+              </svg>
+            </motion.a>
+
+            <motion.a
+              href="https://wa.me/919327177790"
+              target="_blank"
+              rel="noopener noreferrer"
+              whileHover={{ scale: 1.1, rotate: 5 }}
+              whileTap={{ scale: 0.9 }}
+              className="bg-gradient-to-r from-green-500 to-green-600 text-white p-3 rounded-full shadow-lg hover:shadow-xl transition-shadow relative z-10"
+            >
+              <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+              </svg>
+            </motion.a>
+            
+            <motion.a
+              href="#contact"
+              onClick={(e) => handleScrollClick(e, 'contact')}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="relative overflow-hidden bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-bold py-3 px-8 rounded-full shadow-lg group"
+            >
+              <motion.span
+                className="absolute inset-0 bg-gradient-to-r from-emerald-500 to-teal-500"
+                initial={{ x: '100%' }}
+                whileHover={{ x: 0 }}
+                transition={{ duration: 0.3 }}
+              />
+              <span className="relative z-10 flex items-center gap-2 text-sm md:text-base">
+                <Phone className="w-4 h-4" />
+                સંપર્ક કરો
+              </span>
+            </motion.a>
+          </div>
         </div>
-      </header>
+      </motion.header>
 
       <main>
-        {/* Hero / Home Section */}
+        {/* Hero Section with Parallax & 3D Elements */}
         <section
           aria-label="Hero - Home"
-          className="relative w-full flex items-center justify-center text-white text-center"
-          style={{ backgroundImage: `url('${heroImage}')`, backgroundSize: bgSize, backgroundPosition: 'center', backgroundAttachment: bgAttach, backgroundColor: '#2d2416', backgroundRepeat: 'no-repeat', minHeight: '100vh', aspectRatio: '16/9' }}
+          className="relative w-full flex items-center justify-center text-white overflow-hidden"
+          style={{ minHeight: '100vh' }}
         >
-          <div className="absolute inset-0 bg-black/60 z-10"></div>
-          <div className="relative z-20 max-w-3xl px-4 -mt-32 md:-mt-32">
-            <h2 className="text-4xl md:text-6xl font-extrabold leading-tight mb-32" style={{ textShadow: '3px 3px 12px rgba(0,0,0,0.9), 2px 2px 4px rgba(0,0,0,0.8)' }}>
-              <span>તમારી આંખો સામે કાઢેલું,</span>
-              <span className="block mt-3">૧૦૦% શુદ્ધ મગફળીનું તેલ</span>
-            </h2>
-            <p className="text-lg md:text-2xl mb-10 font-medium mt-8 md:mt-12" style={{ textShadow: '2px 2px 8px rgba(0,0,0,0.95), 1px 1px 3px rgba(0,0,0,0.9)' }}>
-              અમારા બાકરોલ સ્થિત ઓઈલ મીલમાં, અમે તમારી લાવેલી શુદ્ધ મગફળીમાંથી ઉચ્ચ ગુણવત્તાનું તેલ કાઢી, ૫ લિટરના ડબ્બામાં પેક કરી આપીએ છીએ.
-            </p>
-            <a 
-              href="#process"
-              onClick={(e) => handleScrollClick(e, 'process')}
-              className="bg-gradient-to-r from-amber-400 to-yellow-400 text-amber-950 font-bold py-4 px-12 rounded-full text-xl hover:from-amber-300 hover:to-yellow-300 transition-all transform hover:scale-110 duration-300 inline-block shadow-2xl border-2 border-amber-600"
+          {/* Parallax Background */}
+          <motion.div
+            style={{
+              backgroundImage: `url('${heroImage}')`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              y: useTransform(scrollYProgress, [0, 0.5], [0, 200]),
+            }}
+            className="absolute inset-0"
+          />
+          
+          {/* Animated Gradient Overlay */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 1 }}
+            className="absolute inset-0 bg-gradient-to-br from-black/70 via-amber-900/50 to-black/70"
+          />
+
+          {/* Floating Oil Drops */}
+          <div className="absolute inset-0 overflow-hidden pointer-events-none">
+            <FloatingOilDrop delay={0} duration={4} />
+            <div className="absolute top-1/4 right-1/4">
+              <FloatingOilDrop delay={1} duration={5} />
+            </div>
+            <div className="absolute bottom-1/3 left-1/4">
+              <FloatingOilDrop delay={2} duration={4.5} />
+            </div>
+            <div className="absolute top-1/2 right-1/3">
+              <FloatingOilDrop delay={1.5} duration={3.5} />
+            </div>
+          </div>
+
+          {/* Hero Content */}
+          <div className="relative z-20 max-w-5xl px-4 md:px-8 text-center">
+            <motion.div
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
             >
-              વધુ જાણો
-            </a>
+              <motion.h2
+                className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold leading-snug mb-6 md:mb-8 py-2"
+                style={{
+                  textShadow: '4px 4px 20px rgba(0,0,0,0.9), 2px 2px 8px rgba(251,191,36,0.5)',
+                }}
+              >
+                <motion.span
+                  initial={{ opacity: 0, x: -50 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.8, delay: 0.4 }}
+                  className="block mb-4 leading-snug"
+                >
+                  તમારી આંખો સામે કાઢેલું,
+                </motion.span>
+                <motion.span
+                  initial={{ opacity: 0, x: 50 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.8, delay: 0.6 }}
+                  className="block bg-gradient-to-r from-amber-300 via-yellow-200 to-amber-300 bg-clip-text text-transparent leading-snug py-1"
+                >
+                  ૧૦૦% શુદ્ધ મગફળીનું તેલ
+                </motion.span>
+              </motion.h2>
+
+              <motion.p
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.8, delay: 0.8 }}
+                className="text-base sm:text-lg md:text-xl lg:text-2xl mb-8 md:mb-12 font-medium max-w-4xl mx-auto leading-relaxed px-4"
+                style={{
+                  textShadow: '2px 2px 12px rgba(0,0,0,0.95)',
+                }}
+              >
+                અમારા બાકરોલ સ્થિત ઓઈલ મીલમાં, અમે તમારી લાવેલી શુદ્ધ મગફળીમાંથી ઉચ્ચ ગુણવત્તાનું તેલ કાઢી, ૫ લિટરના ડબ્બામાં પેક કરી આપીએ છીએ.
+              </motion.p>
+
+              <motion.a
+                href="#process"
+                onClick={(e) => handleScrollClick(e, 'process')}
+                initial={{ opacity: 0, scale: 0.5 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.5, delay: 1 }}
+                whileHover={{ scale: 1.1, rotate: 2 }}
+                whileTap={{ scale: 0.95 }}
+                className="inline-flex items-center gap-3 bg-gradient-to-r from-amber-400 via-yellow-400 to-amber-500 text-amber-950 font-bold py-3 px-10 rounded-full text-lg shadow-2xl border-2 border-amber-300 group relative overflow-hidden"
+              >
+                <motion.span
+                  className="absolute inset-0 bg-gradient-to-r from-yellow-300 to-amber-400"
+                  initial={{ x: '-100%' }}
+                  whileHover={{ x: 0 }}
+                  transition={{ duration: 0.3 }}
+                />
+                <span className="relative z-10">વધુ જાણો</span>
+                <motion.span
+                  animate={{ x: [0, 5, 0] }}
+                  transition={{ duration: 1.5, repeat: Infinity }}
+                  className="relative z-10"
+                >
+                  →
+                </motion.span>
+              </motion.a>
+            </motion.div>
+          </div>
+
+          {/* Scroll Indicator */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1.5, duration: 1 }}
+            className="absolute bottom-10 left-1/2 transform -translate-x-1/2"
+          >
+            <motion.div
+              animate={{ y: [0, 10, 0] }}
+              transition={{ duration: 1.5, repeat: Infinity }}
+              className="w-6 h-10 border-2 border-white/50 rounded-full flex justify-center pt-2"
+            >
+              <motion.div
+                animate={{ y: [0, 12, 0], opacity: [1, 0, 1] }}
+                transition={{ duration: 1.5, repeat: Infinity }}
+                className="w-1.5 h-1.5 bg-white rounded-full"
+              />
+            </motion.div>
+          </motion.div>
+        </section>
+
+        {/* Process Section with 3D Cards */}
+        <section id="process" className="relative py-24 overflow-hidden">
+          {/* Animated background gradient */}
+          <motion.div
+            className="absolute inset-0 bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50"
+            animate={{
+              background: [
+                'linear-gradient(135deg, #fef3c7 0%, #fed7aa 50%, #fef3c7 100%)',
+                'linear-gradient(135deg, #fed7aa 0%, #fef3c7 50%, #fed7aa 100%)',
+                'linear-gradient(135deg, #fef3c7 0%, #fed7aa 50%, #fef3c7 100%)',
+              ],
+            }}
+            transition={{ duration: 10, repeat: Infinity }}
+          />
+
+          {/* Decorative elements */}
+          <div className="absolute top-20 left-10 w-32 h-32 bg-amber-200/30 rounded-full blur-3xl" />
+          <div className="absolute bottom-20 right-10 w-40 h-40 bg-orange-200/30 rounded-full blur-3xl" />
+
+          <div className="container mx-auto px-6 relative z-10">
+            <motion.div
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="text-center mb-16"
+            >
+              <motion.div
+                initial={{ scale: 0 }}
+                whileInView={{ scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
+                className="inline-block mb-4"
+              >
+                <Droplets className="w-16 h-16 text-amber-600 mx-auto" />
+              </motion.div>
+              
+              <h2 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-amber-800 via-orange-700 to-amber-800 bg-clip-text text-transparent mb-4 leading-tight py-2">
+                સિંગતેલ બનાવવાની અમારી પ્રક્રિયા
+              </h2>
+              <p className="text-base md:text-lg text-gray-700 max-w-3xl mx-auto leading-relaxed">
+                શુદ્ધતા અને પારદર્શિતાના ત્રણ સરળ પગલાંમાં તાજું મગફળીનું તેલ.
+              </p>
+            </motion.div>
+
+            <div className="grid md:grid-cols-3 gap-12 max-w-6xl mx-auto">
+              <ProcessStep
+                index={0}
+                icon={<Sprout className="w-20 h-20 text-amber-500" />}
+                title="૧. શ્રેષ્ઠ મગફળી લાવો"
+                description="તમે તમારી પસંદગીની ઉચ્ચ ગુણવત્તાવાળી મગફળી લાવો."
+              />
+              <ProcessStep
+                index={1}
+                icon={<Droplets className="w-20 h-20 text-yellow-500" />}
+                title="૨. તાજું તેલ નિષ્કર્ષણ"
+                description="અમારા આધુનિક મશીન દ્વારા વશેર નજર સામે જ તેલ કાઢવામાં આવે છે."
+              />
+              <ProcessStep
+                index={2}
+                icon={<Package className="w-20 h-20 text-green-600" />}
+                title="૩. સુરક્ષિત પેકિંગ"
+                description="તાજા તેલને તરત જ ૫ લિટરના સ્વચ્છ અને સુરક્ષિત ડબ્બામાં પેક કરવામાં આવે છે."
+              />
+            </div>
           </div>
         </section>
 
-        {/* Our Process Section */}
-        <section id="process" className="py-20 bg-amber-50">
-          <div className="container mx-auto px-6">
-            <div className="text-center mb-12">
-              <h2 className="text-4xl font-bold text-amber-900">સિંગતેલ બનાવવાની અમારી પ્રક્રિયા</h2>
-              <p className="text-lg text-gray-600 mt-2">શુદ્ધતા અને પારદર્શિતાના ત્રણ સરળ પગલાંમાં તાજું મગફળીનું તેલ.</p>
-            </div>
-            <div className="grid md:grid-cols-3 gap-10">
-              <ProcessStep 
-                icon={<PeanutIcon />} 
-                title="૧. શ્રેષ્ઠ મગફળી લાવો" 
-                description="તમે તમારી પસંદગીની ઉચ્ચ ગુણવત્તાવાળી મગફળી લાવો." 
+        {/* Features Section with parallax */}
+        <section id="features" className="relative py-24 overflow-hidden">
+          {/* Parallax background image */}
+          <motion.div
+            style={{
+              backgroundImage: "url('https://www.tastingtable.com/img/gallery/is-peanut-oil-actually-good-for-you/l-intro-1662658428.jpg')",
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              y: useTransform(scrollYProgress, [0.3, 0.7], [0, -100]),
+            }}
+            className="absolute inset-0"
+          />
+
+          {/* Glass morphism overlay */}
+          <div className="absolute inset-0 bg-gradient-to-br from-white/40 via-emerald-50/60 to-teal-50/40 backdrop-blur-md" />
+
+          <div className="container mx-auto px-6 relative z-10">
+            <motion.div
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="text-center mb-16"
+            >
+              <motion.div
+                animate={{ rotate: 360 }}
+                transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+                className="inline-block mb-4"
+              >
+                <Sparkles className="w-16 h-16 text-emerald-600 mx-auto" />
+              </motion.div>
+
+              <h2 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-emerald-800 via-teal-700 to-emerald-800 bg-clip-text text-transparent mb-4 leading-tight py-2">
+                શા માટે અમારું સિંગતેલ પસંદ કરો?
+              </h2>
+              <p className="text-base md:text-lg text-gray-800 max-w-3xl mx-auto leading-relaxed font-medium">
+                બાકરોલમાં શ્રેષ્ઠ અને શુદ્ધ મગફળી તેલનો અનુભવ કરો.
+              </p>
+            </motion.div>
+
+            <div className="grid md:grid-cols-3 gap-10 max-w-6xl mx-auto">
+              <FeatureCard
+                index={0}
+                title="૧૦૦% શુદ્ધ"
+                description="કોઈપણ પ્રકારની મિલાવટ વગર, ફક્ત શુદ્ધ મગફળીનું તેલ. અમે શુદ્ધતાની ગેરંટી આપીએ છીએ."
               />
-              <ProcessStep 
-                icon={<OilDropIcon />} 
-                title="૨. તાજું તેલ નિષ્કર્ષણ" 
-                description="અમારા આધુનિક મશીન દ્વારા વશેર નજર સામે જ તેલ કાઢવામાં આવે છે." 
+              <FeatureCard
+                index={1}
+                title="તમારી સામે પ્રક્રિયા"
+                description="અમારી સંપૂર્ણ પ્રક્રિયા પારદર્શક છે. તમે જાતે જ તેલ નીકળતા જોઈ શકો છો, જે તમને વિશ્વાસ આપે છે."
               />
-              <ProcessStep 
-                icon={<PackageIcon />} 
-                title="૩. સુરક્ષિત પેકિંગ" 
-                description="તાજા તેલને તરત જ ૫ લિટરના સ્વચ્છ અને સુરક્ષિત ડબ્બામાં પેક કરવામાં આવે છે." 
+              <FeatureCard
+                index={2}
+                title="સ્વાસ્થ્યપ્રદ"
+                description="કોલ્ડ પ્રેસ થી કુદરતી વિટામિન્સ અને પોષક તત્વો જળવાઈ રહે છે, જે તમારા સ્વાસ્થ્ય માટે ઉત્તમ છે."
               />
             </div>
           </div>
         </section>
 
-        {/* Why Choose Us Section */}
-        <section id="features" className="py-20" style={{backgroundImage: "url('https://www.tastingtable.com/img/gallery/is-peanut-oil-actually-good-for-you/l-intro-1662658428.jpg')", backgroundSize: 'cover', backgroundAttachment: 'fixed'}}>
-          <div className="container mx-auto px-6 bg-white/30 backdrop-blur-lg py-16 rounded-xl">
-            <div className="text-center mb-12">
-              <h2 className="text-4xl font-bold text-gray-900">શા માટે અમારું સિંગતેલ પસંદ કરો?</h2>
-               <p className="text-lg text-gray-700 mt-2">બાકરોલમાં શ્રેષ્ઠ અને શુદ્ધ મગફળી તેલનો અનુભવ કરો.</p>
-            </div>
-            <div className="grid md:grid-cols-3 gap-8">
-              <FeatureCard 
-                title="૧૦૦% શુદ્ધ" 
-                description="કોઈપણ પ્રકારની મિલાવટ વગર, ફક્ત શુદ્ધ મગફળીનું તેલ. અમે શુદ્ધતાની ગેરંટી આપીએ છીએ." 
-              />
-              <FeatureCard 
-                title="તમારી સામે પ્રક્રિયા" 
-                description="અમારી સંપૂર્ણ પ્રક્રિયા પારદર્શક છે. તમે જાતે જ તેલ નીકળતા જોઈ શકો છો, જે તમને વિશ્વાસ આપે છે." 
-              />
-              <FeatureCard 
-                title="સ્વાસ્થ્યપ્રદ" 
-                description="કોલ્ડ પ્રેસ પદ્ધતિથી કુદરની વિટામિન્સ અને પોષક તત્વો જળવાઈ રહે છે, જે તમારા સ્વાસ્થ્ય માટે ઉત્તમ છે." 
-              />
-            </div>
-          </div>
-        </section>
+        {/* Product Section with 3D tilt effect */}
+        <section id="product" className="relative py-24 bg-gradient-to-br from-white via-amber-50 to-orange-50 overflow-hidden">
+          {/* Decorative background elements */}
+          <div className="absolute top-0 left-0 w-96 h-96 bg-amber-200/20 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
+          <div className="absolute bottom-0 right-0 w-96 h-96 bg-orange-200/20 rounded-full blur-3xl translate-x-1/2 translate-y-1/2" />
 
-        {/* Product Section */}
-        <section id="product" className="py-20 bg-white">
-          <div className="container mx-auto px-6">
-            <div className="flex flex-col md:flex-row items-center gap-12">
-              <div className="md:w-1/2">
-                <img src={PRODUCT_TIN} alt="બાપા સીતારામ શુદ્ધ મગફળીનું તેલ (સિંગતેલ) નો ૧૫ કિલોનો ડબ્બો" className="rounded-xl shadow-2xl w-full h-auto object-cover"/>
-              </div>
-              <div className="md:w-1/2 text-center md:text-left">
-                <h2 className="text-4xl font-bold text-amber-900 mb-4">અમારું ઉત્પાદન: શુદ્ધ સિંગતેલ</h2>
-                <h3 className="text-3xl font-semibold text-green-800 mb-4">૧૫ કિલો શુદ્ધ મગફળી તેલનો ડબ્બો</h3>
-                <p className="text-gray-600 text-lg mb-6">
+          <div className="container mx-auto px-6 relative z-10">
+            <motion.div
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8 }}
+              className="flex flex-col lg:flex-row items-center gap-16"
+            >
+              {/* Product Image with 3D effect */}
+              <motion.div
+                initial={{ opacity: 0, x: -100, rotateY: -30 }}
+                whileInView={{ opacity: 1, x: 0, rotateY: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.8 }}
+                className="lg:w-1/2 perspective-1000"
+              >
+                <motion.div
+                  whileHover={{ scale: 1.05, rotateY: 5, rotateX: 5 }}
+                  transition={{ duration: 0.3 }}
+                  className="relative group"
+                >
+                  <div className="absolute inset-0 bg-gradient-to-br from-amber-400/20 to-orange-400/20 rounded-3xl blur-2xl group-hover:blur-3xl transition-all duration-300" />
+                  <img
+                    src={PRODUCT_TIN}
+                    alt="બાપા સીતારામ શુદ્ધ મગફળીનું તેલ (સિંગતેલ) નો ૧૫ કિલોનો ડબ્બો"
+                    className="relative rounded-3xl shadow-2xl w-full h-auto object-cover border-4 border-white"
+                  />
+                  
+                  {/* Shine effect */}
+                  <motion.div
+                    className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/30 to-transparent rounded-3xl"
+                    initial={{ x: '-100%', opacity: 0 }}
+                    whileHover={{ x: '100%', opacity: 1 }}
+                    transition={{ duration: 0.6 }}
+                  />
+                </motion.div>
+              </motion.div>
+
+              {/* Product Info */}
+              <motion.div
+                initial={{ opacity: 0, x: 100 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.8 }}
+                className="lg:w-1/2 text-center lg:text-left"
+              >
+                <motion.div
+                  initial={{ scale: 0 }}
+                  whileInView={{ scale: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: 0.3, type: "spring" }}
+                  className="inline-block mb-6"
+                >
+                  <Package className="w-16 h-16 text-amber-600" />
+                </motion.div>
+
+                <motion.h2
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: 0.4 }}
+                  className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-amber-800 to-orange-700 bg-clip-text text-transparent mb-6 leading-snug py-1"
+                >
+                  અમારું ઉત્પાદન: શુદ્ધ સિંગતેલ
+                </motion.h2>
+
+                <motion.h3
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: 0.5 }}
+                  className="text-xl md:text-2xl font-semibold text-emerald-700 mb-6 leading-relaxed"
+                >
+                  ૧૫ કિલો શુદ્ધ મગફળી તેલનો ડબ્બો
+                </motion.h3>
+
+                <motion.p
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: 0.6 }}
+                  className="text-gray-700 text-base md:text-lg mb-8 leading-relaxed max-w-xl mx-auto lg:mx-0"
+                >
                   તમારા પરિવારના સ્વાસ્થ્ય માટે ઉત્તમ, તાજગી અને શુદ્ધતાથી ભરપૂર. રસોઈ માટે આદર્શ અને સ્વાદમાં ઉત્તમ મગફળીનું તેલ (સિંગતેલ).
-                </p>
-                <p className="text-4xl font-bold text-amber-900 mb-8">
-                  ₹ કિંમત માટે સંપર્ક કરો
-                </p>
-                <a 
+                </motion.p>
+
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: 0.7 }}
+                  className="mb-10"
+                >
+                  <motion.p
+                    whileHover={{ scale: 1.05 }}
+                    className="text-3xl font-bold bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent inline-block leading-tight py-2"
+                  >
+                    ₹ કિંમત માટે સંપર્ક કરો
+                  </motion.p>
+                </motion.div>
+
+                <motion.a
                   href="#contact"
                   onClick={(e) => handleScrollClick(e, 'contact')}
-                  className="bg-amber-800 text-white font-bold py-3 px-10 rounded-full text-lg hover:bg-amber-900 transition-colors duration-300 inline-block"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: 0.8 }}
+                  whileHover={{ scale: 1.05, rotate: 1 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="inline-flex items-center gap-3 bg-gradient-to-r from-amber-600 to-orange-600 text-white font-bold py-3 px-10 rounded-full text-lg shadow-2xl group relative overflow-hidden"
                 >
-                  ઓર્ડર કરો
-                </a>
-              </div>
+                  <motion.span
+                    className="absolute inset-0 bg-gradient-to-r from-orange-600 to-amber-600"
+                    initial={{ x: '-100%' }}
+                    whileHover={{ x: 0 }}
+                    transition={{ duration: 0.3 }}
+                  />
+                  <span className="relative z-10">ઓર્ડર કરો</span>
+                  <motion.span
+                    animate={{ x: [0, 5, 0] }}
+                    transition={{ duration: 1.5, repeat: Infinity }}
+                    className="relative z-10"
+                  >
+                    →
+                  </motion.span>
+                </motion.a>
+              </motion.div>
+            </motion.div>
+          </div>
+        </section>
+
+        {/* Instagram Section */}
+        <section id="instagram" className="relative py-24 bg-gradient-to-br from-gray-900 via-purple-900 to-pink-900 overflow-hidden">
+          {/* Animated gradient overlay */}
+          <motion.div
+            className="absolute inset-0 opacity-30"
+            animate={{
+              background: [
+                'linear-gradient(135deg, #833ab4 0%, #fd1d1d 50%, #fcb045 100%)',
+                'linear-gradient(135deg, #fd1d1d 0%, #fcb045 50%, #833ab4 100%)',
+                'linear-gradient(135deg, #fcb045 0%, #833ab4 50%, #fd1d1d 100%)',
+                'linear-gradient(135deg, #833ab4 0%, #fd1d1d 50%, #fcb045 100%)',
+              ],
+            }}
+            transition={{ duration: 10, repeat: Infinity }}
+          />
+
+          {/* Decorative elements */}
+          <div className="absolute top-20 left-20 w-64 h-64 bg-pink-500/20 rounded-full blur-3xl animate-pulse" />
+          <div className="absolute bottom-20 right-20 w-64 h-64 bg-purple-500/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
+
+          <div className="container mx-auto px-6 relative z-10">
+            <motion.div
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="text-center mb-16"
+            >
+              <motion.div
+                animate={{ 
+                  scale: [1, 1.1, 1],
+                  rotate: [0, 5, -5, 0]
+                }}
+                transition={{ duration: 3, repeat: Infinity }}
+                className="inline-block mb-6"
+              >
+                <svg className="w-20 h-20 text-white mx-auto" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                </svg>
+              </motion.div>
+
+              <h2 className="text-3xl md:text-4xl font-bold text-white mb-4 leading-tight py-2">
+                અમને Instagram પર ફોલો કરો
+              </h2>
+              <p className="text-base md:text-lg text-gray-200 max-w-3xl mx-auto leading-relaxed mb-8">
+                અમારી તાજી અપડેટ્સ, ગ્રાહક સમીક્ષાઓ અને વધુ માહિતી માટે અમને Instagram પર જોડાવો.
+              </p>
+
+              <motion.a
+                href="https://www.instagram.com/bapa_sitaram_oilmill"
+                target="_blank"
+                rel="noopener noreferrer"
+                initial={{ opacity: 0, scale: 0.8 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.3 }}
+                whileHover={{ scale: 1.05, rotate: 2 }}
+                whileTap={{ scale: 0.95 }}
+                className="inline-flex items-center gap-3 bg-gradient-to-r from-purple-600 via-pink-600 to-orange-500 text-white font-bold py-4 px-10 rounded-full text-lg shadow-2xl group relative overflow-hidden"
+              >
+                <motion.span
+                  className="absolute inset-0 bg-gradient-to-r from-pink-600 via-orange-500 to-purple-600"
+                  initial={{ x: '-100%' }}
+                  whileHover={{ x: 0 }}
+                  transition={{ duration: 0.5 }}
+                />
+                <svg className="w-6 h-6 relative z-10" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                </svg>
+                <span className="relative z-10">@bapa_sitaram_oilmill</span>
+                <motion.span
+                  animate={{ x: [0, 5, 0] }}
+                  transition={{ duration: 1.5, repeat: Infinity }}
+                  className="relative z-10"
+                >
+                  →
+                </motion.span>
+              </motion.a>
+            </motion.div>
+
+            {/* Instagram-style grid preview */}
+            <div className="max-w-5xl mx-auto">
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.5 }}
+                className="bg-white/10 backdrop-blur-lg rounded-3xl p-8 border border-white/20"
+              >
+                <div className="text-center text-white mb-6">
+                  <p className="text-lg font-semibold">અમારા Instagram પર વધુ જુઓ</p>
+                  <p className="text-sm text-gray-300 mt-2">શુદ્ધ સિંગતેલની પ્રક્રિયા અને ગ્રાહક અનુભવો</p>
+                </div>
+                
+                <div className="grid grid-cols-3 gap-4">
+                  {[1, 2, 3, 4, 5, 6].map((item, index) => (
+                    <motion.a
+                      key={item}
+                      href="https://www.instagram.com/bapa_sitaram_oilmill"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      initial={{ opacity: 0, scale: 0.8 }}
+                      whileInView={{ opacity: 1, scale: 1 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: 0.6 + index * 0.1 }}
+                      whileHover={{ scale: 1.05, rotate: 2 }}
+                      className="aspect-square bg-gradient-to-br from-purple-600/30 to-pink-600/30 rounded-xl backdrop-blur-sm border border-white/20 flex items-center justify-center overflow-hidden group relative"
+                    >
+                      <div className="absolute inset-0 bg-gradient-to-br from-transparent via-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                      <svg className="w-12 h-12 text-white/50 group-hover:text-white/80 transition-colors" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                      </svg>
+                    </motion.a>
+                  ))}
+                </div>
+
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  whileInView={{ opacity: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: 1.2 }}
+                  className="text-center mt-8"
+                >
+                  <p className="text-white/80 text-sm">
+                    Instagram પર અમારી બધી પોસ્ટ્સ જોવા માટે ક્લિક કરો
+                  </p>
+                </motion.div>
+              </motion.div>
             </div>
           </div>
         </section>
-        
-        {/* Contact Section */}
-        <section id="contact" className="py-20 bg-gray-800 text-white">
-          <div className="container mx-auto px-6 text-center">
-            <h2 className="text-4xl font-bold mb-6">અમારો સંપર્ક કરો</h2>
-            <p className="text-lg text-gray-300 mb-8 max-w-2xl mx-auto">
-             બાકરોલમાં શુદ્ધ મગફળીના તેલ (સિંગતેલ) વિશે વધુ માહિતી અથવા ઓર્ડર માટે, નીચે આપેલા સરનામે રૂબરૂ મુલાકાત લો અથવા ફોન કરો.
-            </p>
-            <div className="flex flex-col md:flex-row justify-center items-center gap-10">
-              <div className="bg-gray-700 p-6 rounded-lg">
-                <h3 className="text-xl font-semibold mb-2">અમારું સરનામું</h3>
-                <address className="not-italic">
-                  <p className="text-gray-300 max-w-xs">શ્રીયમ હેરિટેજ ફ્લેટ્સ અને દુકાનો,<br/>બાકરોલ સર્કલ પાસે, સરદાર પટેલ રિંગ રોડ,<br/>વેજલપુર, બાકરોલ, અમદાવાદ, ગુજરાત ૩૮૨૨૧૦</p>
-                  <a href={gmapsUrl} target="_blank" rel="noopener noreferrer" className="text-yellow-400 hover:text-yellow-300 mt-2 inline-block">ગૂગલ મેપ્સ પર જુઓ</a>
-                </address>
-              </div>
-              <div className="bg-gray-700 p-6 rounded-lg">
-                <h3 className="text-xl font-semibold mb-2">ફોન નંબર</h3>
-                <a href="tel:+919327177990" className="text-gray-300 block hover:text-yellow-400">+૯૧ ૯૩૨૭૧ ૭૭૯૯૦</a>
-                <a href="tel:+917016875181" className="text-gray-300 mt-1 block hover:text-yellow-400">+૯૧ ૭૦૧૬૮ ૭૫૧૮૧</a>
-                <a href="tel:+919725922323" className="text-gray-300 mt-1 block hover:text-yellow-400">+૯૧ ૯૭૨૫૯ ૨૨૩૨૩</a>
-              </div>
+
+        {/* Contact Section with enhanced design */}
+        <section id="contact" className="relative py-24 overflow-hidden">
+          {/* Animated gradient background */}
+          <motion.div
+            className="absolute inset-0 bg-gradient-to-br from-slate-900 via-gray-800 to-slate-900 pointer-events-none"
+            animate={{
+              background: [
+                'linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%)',
+                'linear-gradient(135deg, #1e293b 0%, #334155 50%, #1e293b 100%)',
+                'linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%)',
+              ],
+            }}
+            transition={{ duration: 8, repeat: Infinity }}
+          />
+
+          {/* Decorative lights */}
+          <div className="absolute top-20 left-20 w-64 h-64 bg-amber-500/10 rounded-full blur-3xl animate-pulse pointer-events-none" />
+          <div className="absolute bottom-20 right-20 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl animate-pulse pointer-events-none" style={{ animationDelay: '1s' }} />
+
+          <div className="container mx-auto px-6 text-white relative z-10">
+            <motion.div
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="text-center mb-16"
+            >
+              <motion.div
+                animate={{ scale: [1, 1.1, 1] }}
+                transition={{ duration: 2, repeat: Infinity }}
+                className="inline-block mb-6"
+              >
+                <Phone className="w-16 h-16 text-amber-400 mx-auto" />
+              </motion.div>
+
+              <h2 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-amber-300 via-yellow-200 to-amber-300 bg-clip-text text-transparent mb-6 leading-tight py-2">
+                અમારો સંપર્ક કરો
+              </h2>
+              <p className="text-base md:text-lg text-gray-300 max-w-3xl mx-auto leading-relaxed">
+                બાકરોલમાં શુદ્ધ મગફળીના તેલ (સિંગતેલ) વિશે વધુ માહિતી અથવા ઓર્ડર માટે, નીચે આપેલા સરનામે રૂબરૂ મુલાકાત લો અથવા ફોન કરો.
+              </p>
+            </motion.div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 max-w-7xl mx-auto items-start">
+              {/* Address Card with Interactive Map */}
+              <motion.div
+                initial={{ opacity: 0, x: -50 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6 }}
+                className="flex flex-col gap-6 h-full"
+              >
+                {/* Address Info */}
+                <motion.div
+                  whileHover={{ y: -5 }}
+                  className="bg-gradient-to-br from-gray-800/80 to-gray-900/80 backdrop-blur-xl p-8 rounded-2xl border border-gray-700/50 shadow-2xl relative overflow-hidden group min-h-[280px] flex flex-col justify-between"
+                >
+                  <motion.div
+                    className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+                    style={{
+                      background: 'linear-gradient(45deg, transparent, rgba(251, 191, 36, 0.1), transparent)',
+                    }}
+                  />
+
+                  <motion.div
+                    initial={{ scale: 0 }}
+                    whileInView={{ scale: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: 0.3, type: "spring" }}
+                    className="mb-4"
+                  >
+                    <MapPin className="w-12 h-12 text-amber-400" />
+                  </motion.div>
+
+                  <h3 className="text-xl font-semibold mb-4 text-amber-300">અમારું સરનામું</h3>
+                  <address className="not-italic text-sm md:text-base text-gray-300 leading-relaxed mb-6">
+                    <p>શ્રીયમ હેરિટેજ ફ્લેટ્સ અને દુકાનો,</p>
+                    <p>બાકરોલ સર્કલ પાસે, સરદાર પટેલ રિંગ રોડ,</p>
+                    <p>વેજલપુર, બાકરોલ,</p>
+                    <p>અમદાવાદ, ગુજરાત ૩૮૨૨૧૦</p>
+                  </address>
+                  
+                  <motion.a
+                    href={gmapsUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="inline-flex items-center gap-2 bg-gradient-to-r from-amber-500 to-yellow-500 text-gray-900 font-bold py-2 px-5 rounded-full text-sm md:text-base hover:shadow-lg transition-all relative z-10"
+                  >
+                    <MapPin className="w-5 h-5" />
+                    ગૂગલ મેપ્સ પર જુઓ
+                  </motion.a>
+                </motion.div>
+
+                {/* Interactive Google Map */}
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: 0.4 }}
+                  className="bg-gradient-to-br from-gray-800/80 to-gray-900/80 backdrop-blur-xl p-4 rounded-2xl border border-gray-700/50 shadow-2xl overflow-hidden flex-grow flex items-stretch"
+                >
+                  <iframe
+                    src="https://maps.google.com/maps?q=SHRIYAM+HERITAGE+Baakrol+Badrabad+Ahmedabad+Gujarat&output=embed"
+                    width="100%"
+                    height="100%"
+                    style={{ border: 0, borderRadius: '12px', minHeight: '280px' }}
+                    allowFullScreen
+                    loading="lazy"
+                    referrerPolicy="no-referrer-when-downgrade"
+                    title="બાપા સીતારામ મીની ઓઈલ મીલ નું સ્થાન"
+                    className="w-full"
+                  />
+                </motion.div>
+              </motion.div>
+
+              {/* Phone Numbers with WhatsApp */}
+              <motion.div
+                initial={{ opacity: 0, x: 50 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6 }}
+                className="flex flex-col gap-6 h-full"
+              >
+                {/* Phone Card */}
+                <motion.div
+                  whileHover={{ y: -5 }}
+                  className="bg-gradient-to-br from-gray-800/80 to-gray-900/80 backdrop-blur-xl p-8 rounded-2xl border border-gray-700/50 shadow-2xl relative overflow-hidden group min-h-[280px]"
+                >
+                  <motion.div
+                    className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+                    style={{
+                      background: 'linear-gradient(45deg, transparent, rgba(16, 185, 129, 0.1), transparent)',
+                    }}
+                  />
+
+                  <motion.div
+                    initial={{ scale: 0 }}
+                    whileInView={{ scale: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: 0.3, type: "spring" }}
+                    className="mb-4"
+                  >
+                    <Phone className="w-12 h-12 text-emerald-400" />
+                  </motion.div>
+
+                  <h3 className="text-xl font-semibold mb-6 text-emerald-300">ફોન નંબર</h3>
+                  
+                  <div className="space-y-4">
+                    {[
+                      { tel: '+919327177790', display: '+૯૧ ૯૩૨૭૧ ૭૭૭૯૦' },
+                      { tel: '+917016875181', display: '+૯૧ ૭૦૧૬૮ ૭૫૧૮૧' },
+                      { tel: '+919725922323', display: '+૯૧ ૯૭૨૫૯ ૨૨૩૨૩' }
+                    ].map((phone, index) => (
+                      <motion.a
+                        key={phone.tel}
+                        href={`tel:${phone.tel}`}
+                        initial={{ opacity: 0, x: 20 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: 0.4 + index * 0.1 }}
+                        whileHover={{ x: 5 }}
+                        className="flex items-center gap-3 text-gray-300 hover:text-amber-300 transition-colors text-base group/phone"
+                      >
+                        <motion.div
+                          whileHover={{ rotate: 360 }}
+                          transition={{ duration: 0.5 }}
+                          className="bg-emerald-600/20 p-2 rounded-full group-hover/phone:bg-emerald-600/40 transition-colors"
+                        >
+                          <Phone className="w-5 h-5 text-emerald-400" />
+                        </motion.div>
+                        <span className="font-medium">{phone.display}</span>
+                      </motion.a>
+                    ))}
+                  </div>
+                </motion.div>
+
+                {/* WhatsApp Quick Contact */}
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: 0.5 }}
+                  className="bg-gradient-to-br from-green-900/40 to-emerald-900/40 backdrop-blur-xl p-8 rounded-2xl border border-green-700/50 shadow-2xl flex-grow flex flex-col justify-center min-h-[280px]"
+                >
+                  <div className="text-center">
+                    <motion.div
+                      animate={{ scale: [1, 1.1, 1] }}
+                      transition={{ duration: 2, repeat: Infinity }}
+                      className="inline-block mb-4"
+                    >
+                      <svg className="w-16 h-16 text-green-400 mx-auto" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+                      </svg>
+                    </motion.div>
+                    <h4 className="text-lg font-semibold text-green-300 mb-3">WhatsApp પર સંપર્ક કરો</h4>
+                    <p className="text-gray-300 text-sm mb-4">ઝડપી જવાબ માટે WhatsApp પર મેસેજ કરો</p>
+                    <motion.a
+                      href="https://wa.me/919327177790"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="inline-flex items-center gap-2 bg-green-600 hover:bg-green-500 text-white font-bold py-3 px-6 rounded-full transition-all shadow-lg"
+                    >
+                      <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+                      </svg>
+                      WhatsApp પર મેસેજ કરો
+                    </motion.a>
+                  </div>
+                </motion.div>
+              </motion.div>
             </div>
           </div>
         </section>
       </main>
 
-      {/* Footer */}
-      <footer className="bg-gray-900 text-white py-6">
-        <div className="container mx-auto px-6 text-center">
-          <p>&copy; {new Date().getFullYear()} બાપા સીતારામ મીની ઓઈલ મીલ. સર્વાધિકાર સુરક્ષિત.</p>
-          <p className="text-sm text-gray-400 mt-2">બાકરોલ, અમદાવાદમાં શુદ્ધ સિંગતેલ અને મગફળીના તેલ માટે તમારો વિશ્વાસપાત્ર સ્ત્રોત.</p>
+      {/* Enhanced Footer */}
+      <footer className="relative bg-gradient-to-br from-gray-950 to-slate-900 text-white py-10 border-t border-gray-800">
+        <div className="container mx-auto px-6 text-center relative z-10">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
+            <p className="text-base mb-2">
+              &copy; {new Date().getFullYear()} બાપા સીતારામ મીની ઓઈલ મીલ. સર્વાધિકાર સુરક્ષિત.
+            </p>
+            <p className="text-gray-400 text-sm">
+              બાકરોલ, અમદાવાદમાં શુદ્ધ સિંગતેલ અને મગફળીના તેલ માટે તમારો વિશ્વાસપાત્ર સ્ત્રોત.
+            </p>
+          </motion.div>
+
+          {/* Decorative elements */}
+          <motion.div
+            animate={{ scale: [1, 1.2, 1] }}
+            transition={{ duration: 3, repeat: Infinity }}
+            className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-32 h-1 bg-gradient-to-r from-transparent via-amber-500 to-transparent opacity-50"
+          />
         </div>
       </footer>
-    </div>
+    </motion.div>
   );
 };
 
