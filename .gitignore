@@ -22,3 +22,15 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Environment Variables
+.env
+.env.*
+!.env.example
+
+# Local Token Storage
+instagram_token.json
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
