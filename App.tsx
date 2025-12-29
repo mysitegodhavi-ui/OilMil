@@ -314,6 +314,15 @@ const FeatureCard: React.FC<FeatureCardProps> = ({ title, description, index }) 
   );
 };
 
+interface InstagramPost {
+  id: string;
+  caption?: string;
+  media_type: 'IMAGE' | 'VIDEO' | 'CAROUSEL_ALBUM';
+  media_url: string;
+  permalink: string;
+  thumbnail_url?: string;
+}
+
 const App: React.FC = () => {
   const { scrollYProgress } = useScroll();
   const backgroundColor = useTransform(
@@ -341,9 +350,27 @@ const App: React.FC = () => {
   const [lastScrollY, setLastScrollY] = useState(0);
   const [language, setLanguage] = useState<'gu' | 'en' | 'hi'>('gu');
   const [showLanguageModal, setShowLanguageModal] = useState(true);
+  const [instagramPosts, setInstagramPosts] = useState<InstagramPost[]>([]);
 
   // Get translations for current language
   const t = translations[language];
+
+  useEffect(() => {
+    const fetchInstagramPosts = async () => {
+      try {
+        // Fetch from our local proxy server which handles caching and token renewal
+        const response = await fetch('/api/instagram');
+        const data = await response.json();
+        if (data.data) {
+          setInstagramPosts(data.data);
+        }
+      } catch (error) {
+        console.error('Error fetching Instagram posts:', error);
+      }
+    };
+
+    fetchInstagramPosts();
+  }, []);
 
   useEffect(() => {
     // Check if language preference exists in localStorage
@@ -411,7 +438,7 @@ const App: React.FC = () => {
                 <div className="w-20 h-20 mx-auto mb-4 bg-gradient-to-br from-amber-400 to-orange-500 rounded-full flex items-center justify-center">
                   <Droplets className="w-12 h-12 text-white" />
                 </div>
-                <h2 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-amber-800 to-orange-700 bg-clip-text text-transparent mb-2">
+                <h2 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-amber-800 to-orange-700 bg-clip-text text-transparent mb-2 leading-relaxed py-2">
                   Select Language / ભાષા પસંદ કરો / भाषा चुनें
                 </h2>
                 <p className="text-gray-600 text-sm">Choose your preferred language</p>
@@ -1043,10 +1070,14 @@ const App: React.FC = () => {
                 </div>
                 
                 <div className="grid grid-cols-3 gap-4">
-                  {[1, 2, 3, 4, 5, 6].map((item, index) => (
+                  {(instagramPosts.length > 0 ? instagramPosts.slice(0, 6) : [1, 2, 3, 4, 5, 6]).map((item, index) => {
+                    const isPost = typeof item === 'object';
+                    const post = isPost ? (item as InstagramPost) : null;
+                    
+                    return (
                     <motion.a
-                      key={item}
-                      href="https://www.instagram.com/bapa_sitaram_oilmill"
+                      key={isPost ? post.id : item}
+                      href={isPost ? post.permalink : "https://www.instagram.com/bapa_sitaram_oilmill"}
                       target="_blank"
                       rel="noopener noreferrer"
                       initial={{ opacity: 0, scale: 0.8 }}
@@ -1056,12 +1087,40 @@ const App: React.FC = () => {
                       whileHover={{ scale: 1.05, rotate: 2 }}
                       className="aspect-square bg-gradient-to-br from-purple-600/30 to-pink-600/30 rounded-xl backdrop-blur-sm border border-white/20 flex items-center justify-center overflow-hidden group relative"
                     >
-                      <div className="absolute inset-0 bg-gradient-to-br from-transparent via-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                      <svg className="w-12 h-12 text-white/50 group-hover:text-white/80 transition-colors" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
-                      </svg>
+                      {isPost ? (
+                        <>
+                          {post.media_type === 'VIDEO' ? (
+                            <video
+                              src={post.media_url}
+                              className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                              autoPlay
+                              muted
+                              loop
+                              playsInline
+                            />
+                          ) : (
+                            <img
+                              src={post.media_url}
+                              alt={post.caption || 'Instagram Post'}
+                              className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                            />
+                          )}
+                          <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center z-10">
+                             <svg className="w-12 h-12 text-white" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                             </svg>
+                          </div>
+                        </>
+                      ) : (
+                        <>
+                          <div className="absolute inset-0 bg-gradient-to-br from-transparent via-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                          <svg className="w-12 h-12 text-white/50 group-hover:text-white/80 transition-colors" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                          </svg>
+                        </>
+                      )}
                     </motion.a>
-                  ))}
+                  )})}
                 </div>
 
                 <motion.div
